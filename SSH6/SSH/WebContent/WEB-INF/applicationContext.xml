@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	   			http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+	   			http://www.springframework.org/schema/aop
+	   			http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+	   			http://www.springframework.org/schema/tx
+	   			http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+
+<!-- important -->	  
+ 					
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">  
+	    <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />  
+	    <property name="url"  
+	        value="jdbc:oracle:thin:@localhost:1521:xe" />  
+	    <property name="username" value="francis" />  
+	    <property name="password" value="000000" /> 
+	</bean>
+	
+	
+	
+	
+	<!-- 实际开发的一个配置流程，从(1)Action-(2)Service-(3)DAO-(4)sessionFactory-(5)hibernate.cfg-(6)dataSource -->
+	<!--  -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="configLocation" value="/WEB-INF/hibernate.cfg.xml"></property>
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	
+	<!-- dao层配置 -->
+	<bean id="customerDao" class="com.infosys.ssh.dao.CustomerDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean id="adminDao" class="com.infosys.ssh.dao.impl.AdminDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="userDao" class="com.infosys.ssh.dao.impl.UserDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="departmentDao" class="com.infosys.ssh.dao.impl.DepartmentDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	
+	<!-- service层配置 -->
+	<bean id="customerService" class="com.infosys.ssh.service.CustomerServiceImpl">
+		<property name="customerDao" ref="customerDao"></property>
+	</bean>
+	
+	<bean id="adminService" class="com.infosys.ssh.service.impl.AdminServiceImpl" >
+		<property name="adminDao" ref="adminDao"></property>
+	</bean>
+	<bean id="userService" class="com.infosys.ssh.service.impl.UserServiceImpl" >
+		<property name="userDao" ref="userDao"></property>
+	</bean>
+	<bean id="departmentService" class="com.infosys.ssh.service.impl.DepartmentServiceimpl" >
+		<property name="departmentDao" ref="departmentDao"></property>
+	</bean>
+	
+	
+	<!-- control层配置 -->
+	<bean id="regAction" class="com.infosys.ssh.action.RegAction">
+		<property name="customerService" ref="customerService"></property>
+	</bean>
+	
+	<bean id="adminAction" class="com.infosys.ssh.action.AdminAction">
+		<property name="adminService" ref="adminService"></property>
+	</bean>
+	
+	<bean id="userAction" class="com.infosys.ssh.action.UserAction">
+		<property name="userService" ref="userService"></property>
+	</bean>
+	<bean id="departmentAction" class="com.infosys.ssh.action.DepartmentAction">
+		<property name="departmentService" ref="departmentService"></property>
+	</bean>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<bean id="deleteCusAction" class="com.infosys.ssh.action.DeleteCusAction">
+		<property name="customerDao" ref="customerDao"></property>
+	</bean>
+	<!-- 事务管理器 -->
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<!-- 开启注解事务 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="add*" propagation="REQUIRED"/>
+			<tx:method name="*" read-only="false"/>
+		</tx:attributes>
+	</tx:advice>
+	<aop:config>
+		<aop:pointcut id="alladdmethod" expression="execution(* com.infosys.ssh.dao.*.*(..))"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="alladdmethod"/>
+	</aop:config>
+	
+<!-- important -->
+</beans>

@@ -1,0 +1,34 @@
+*{
+	padding:0;
+	margin:0;
+	border:0;
+}
+body{
+	background:url(../images/login-bg.jpg);
+}
+#loginPanel{
+	margin-top:10%;
+	background:rgba(80,80,80,1);
+	border:0;
+}
+ul{
+	list-style-type:none;
+}
+#verCode{
+	width:40%;
+	display:inline;
+	margin-right:5%;
+}
+#codeInfo{
+	width:10px;
+	height:10px;
+	display:inline;
+	margin-right:5%;
+	visibility:hidden;
+}
+#codeImg{
+	cursor:pointer;
+}
+#loginValidate{
+	color:#993333;
+}

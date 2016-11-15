@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.infosys.ssh.domain.Job" table="t_job" >
+		<id name="id">
+			<generator class="sequence" ></generator>
+		</id>
+		
+		<!-- property -->
+		<property name="jobName" />
+		<property name="description" length="2000"/>
+		
+		<!-- users property, Job and User is many to one entity relationship -->
+		<set name="users" >
+			<key column="jobId"></key>
+			<one-to-many class="com.infosys.ssh.domain.User"></one-to-many>
+		</set>
+		
+	</class>
+</hibernate-mapping>

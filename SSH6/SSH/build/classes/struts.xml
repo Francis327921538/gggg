@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="gb2312"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+<constant name="struts.multipart.saveDir" value="/tmp"/>
+	<package name="chaper12_SS2H" extends="struts-default">
+	
+		
+	
+	
+		<action name="cusreg" class="regAction">  <!-- 这里交给了Spring处理 -->
+			<result name="success">/success.jsp</result>
+			<result name="input">/cusreg.jsp</result>
+		</action>
+		<action name="deleteCus" class="deleteCusAction" >  <!-- 这里交给了Spring处理 -->
+			<result name="success">/success.jsp</result>
+			<result name="input">/cusreg.jsp</result>
+		</action>
+		
+		<!-- 本系统业务 -->
+		<action name="admin_*" class="adminAction" method="{1}">
+			<result name="toIndex">/success.jsp</result>
+			<result name="loginUI">/login.jsp</result>
+			
+		</action>
+		
+		<action name="user_*" class="userAction" method="{1}">
+			<result name="login">/index.jsp</result>
+			<result name="findAll">/queryUser.jsp</result>
+			<result name="err">/login.jsp</result>
+			<result name="findFuzzy">/queryUserFuzzy.jsp</result>
+			<result name="logout">/login.jsp</result>
+			<result name="pwdChanged">/changePwd.jsp</result>
+		</action>
+		
+		<action name="dep_*" class="departmentAction" method="{1}">
+			<result name=""></result> 
+		</action>
+		
+	<!-- 	<action name="createImageAction" class="com.infosys.ssh.action.CreateImageAction">
+                <result name="success" type="stream">
+                    <param name="contentType">image/jpeg</param>
+                    <param name="inputName">inputStream</param>
+                </result>
+　　　　　　  </action> -->
+            
+        <action name="loginValidateAction" class="com.infosys.ssh.action.LoginValidateAction">
+            <result name="success">/success.jsp</result>
+            <result name="input">/login.jsp</result>
+        </action>
+        
+        <action name="createImageAction" class="com.infosys.ssh.action.CreateImageAction">
+            <result name="success" type="stream">
+                    <param name="contentType">image/jpeg</param>
+                    <param name="inputName">inputStream</param>
+                </result>
+        </action>
+        <action name="createImageActionAjax" class="com.infosys.ssh.action.CreateImageAction" method="codeAjax">
+        </action>
+        <action name="uploadFile" class="com.infosys.ssh.action.UploadAction">
+        	<result name="success">/zone.jsp</result>
+        </action>
+	</package>
+</struts>
